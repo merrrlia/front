@@ -1,4 +1,4 @@
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./components/CafeMenu";
 import "./App.css"; // Импортируем стили
 
 function App() {
