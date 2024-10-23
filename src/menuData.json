@@ -1,0 +1,53 @@
+{
+    "Tea": [
+        {
+            "name": "Green Tea",
+            "description": "Refreshing and healthy green tea.",
+            "image": "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"
+        },
+        {
+            "name": "Chai Latte",
+            "description": "Aromatic blend of tea, spices, and milk.",
+            "image": "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"
+        },
+        {
+            "name": "Black Tea",
+            "description": "Classic black tea.",
+            "image": "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"
+        }
+    ],
+    "Pastries": [
+        {
+            "name": "Croissant",
+            "description": "Flaky and buttery French pastry.",
+            "image": "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"
+        },
+        {
+            "name": "Muffin",
+            "description": "Soft and delicious baked muffin.",
+            "image": "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"
+        },
+        {
+            "name": "Scone",
+            "description": "Biscuit-like treat.",
+            "image": "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"
+        }
+    ],
+    "Coffee": [
+        {
+            "name": "Espresso",
+            "description": "Strong and bold shot of coffee.",
+            "image": "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"
+        },
+        {
+            "name": "Latte",
+            "description": "Creamy blend of coffee and steamed milk.",
+            "image": "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"
+        },
+        {
+            "name": "Cappuccino",
+            "description": "Perfect mix of espresso, steamed milk, and foam.",
+            "image": "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"
+        }
+    ]
+}
