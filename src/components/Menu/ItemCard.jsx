@@ -8,7 +8,7 @@ const ItemCard = ({ item, onClick }) => {
             onClick={() => onClick(item)}
         >
             <img
-                src={item.image}
+                src={item.imageUrl}
                 alt={item.name}
                 className="w-full h-48 object-cover object-center"
             />

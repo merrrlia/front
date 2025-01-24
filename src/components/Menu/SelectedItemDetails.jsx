@@ -11,7 +11,7 @@ const SelectedItemDetails = ({ item, addToCart, closeDetails }) => {
                     ✕
                 </button>
                 <img
-                    src={item.image}
+                    src={item.imageUrl}
                     alt={item.name}
                     className="w-full h-64 object-cover rounded-lg"
                 />

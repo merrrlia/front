@@ -1,37 +1,29 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import CategoryHeader from "./CategoryHeader";
 import ItemCard from "./ItemCard";
 import SelectedItemDetails from "./SelectedItemDetails";
+import { MenuService } from "../../services/MenuService";
 
 const Menu = ({ cart, setCart }) => {
-    const [menu, setMenu] = useState({});
-    const [selectedCategory, setSelectedCategory] = useState("Tea");
+    const [menu, setMenu] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState("Coffee");
     const [isScrolled, setIsScrolled] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
 
     useEffect(() => {
-        const fetchMenuData = async () => {
+        const fetchMenu = async () => {
             try {
-                const response = await axios.get(
-                    "http://localhost:8080/api/menu"
-                );
-                setMenu(response.data);
+                const menuData = await MenuService.getMenu();
+                setMenu(menuData);
             } catch (error) {
-                console.error("Error fetching menu data:", error);
+                console.error("Failed to fetch menu:", error);
             }
         };
-        fetchMenuData();
+        fetchMenu();
     }, []);
 
-    const categories = Object.keys(menu);
-
     const handleScroll = () => {
-        if (window.scrollY > 50) {
-            setIsScrolled(true);
-        } else {
-            setIsScrolled(false);
-        }
+        setIsScrolled(window.scrollY > 50);
     };
 
     useEffect(() => {
@@ -55,15 +47,15 @@ const Menu = ({ cart, setCart }) => {
     return (
         <div className="relative">
             <CategoryHeader
-                categories={categories}
+                categories={["Coffee"]}
                 selectedCategory={selectedCategory}
                 onSelectCategory={setSelectedCategory}
                 isScrolled={isScrolled}
             />
             <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
-                {menu[selectedCategory]?.map((item) => (
+                {menu.map((item) => (
                     <ItemCard
-                        key={item.name}
+                        key={item.id}
                         item={item}
                         onClick={handleItemClick}
                     />
