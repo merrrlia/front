@@ -47,7 +47,7 @@ const Menu = ({ cart, setCart }) => {
     return (
         <div className="relative">
             <CategoryHeader
-                categories={["Coffee"]}
+                categories={["Keks"]}
                 selectedCategory={selectedCategory}
                 onSelectCategory={setSelectedCategory}
                 isScrolled={isScrolled}
