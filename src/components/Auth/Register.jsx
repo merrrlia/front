@@ -22,7 +22,9 @@ const Register = () => {
 
         // Простая логика регистрации (здесь можно добавить запрос к API)
         if (email && password) {
-            setSuccess("Регистрация прошла успешно! Перенаправление на страницу входа...");
+            setSuccess(
+                "Регистрация прошла успешно! Перенаправление на страницу входа..."
+            );
             setTimeout(() => {
                 navigate("/auth");
             }, 2000);
@@ -32,22 +34,23 @@ const Register = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+        <div className="flex items-center justify-center h-[calc(100vh-85px)] bg-gray-100 p-4">
             <div className="w-full max-w-md bg-white shadow-md rounded-lg p-8">
-                <h2 className="text-2xl font-semibold mb-6 text-center">Регистрация</h2>
+                <h2 className="text-2xl font-semibold mb-6 text-center">
+                    Регистрация
+                </h2>
                 {error && (
-                    <div className="mb-4 text-red-500 text-sm">
-                        {error}
-                    </div>
+                    <div className="mb-4 text-red-500 text-sm">{error}</div>
                 )}
                 {success && (
-                    <div className="mb-4 text-green-500 text-sm">
-                        {success}
-                    </div>
+                    <div className="mb-4 text-green-500 text-sm">{success}</div>
                 )}
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <label htmlFor="email" className="block text-gray-700 mb-2">
+                        <label
+                            htmlFor="email"
+                            className="block text-gray-700 mb-2"
+                        >
                             Электронная почта
                         </label>
                         <input
@@ -61,7 +64,10 @@ const Register = () => {
                         />
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="password" className="block text-gray-700 mb-2">
+                        <label
+                            htmlFor="password"
+                            className="block text-gray-700 mb-2"
+                        >
                             Пароль
                         </label>
                         <input
@@ -75,7 +81,10 @@ const Register = () => {
                         />
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="confirmPassword" className="block text-gray-700 mb-2">
+                        <label
+                            htmlFor="confirmPassword"
+                            className="block text-gray-700 mb-2"
+                        >
                             Подтвердите пароль
                         </label>
                         <input
@@ -98,7 +107,10 @@ const Register = () => {
                 <div className="mt-4 text-center">
                     <p className="text-gray-600">
                         Уже есть аккаунт?{" "}
-                        <Link to="/auth" className="text-blue-500 hover:underline">
+                        <Link
+                            to="/auth"
+                            className="text-blue-500 hover:underline"
+                        >
                             Войти
                         </Link>
                     </p>

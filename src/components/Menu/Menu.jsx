@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { MenuService } from "../../services/MenuService";
-import CategoryHeader from "./CategoryHeader";
+import CategoryHeader from "../Header/CategoryHeader";
 import ItemCard from "./ItemCard";
 import SelectedItemDetails from "./SelectedItemDetails";
 
 const Menu = ({ cart, setCart }) => {
     const [menu, setMenu] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState("Coffee");
-    const [isScrolled, setIsScrolled] = useState(false);
+    const [filteredMenu, setFilteredMenu] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState("All");
     const [selectedItem, setSelectedItem] = useState(null);
 
     useEffect(() => {
@@ -15,6 +15,7 @@ const Menu = ({ cart, setCart }) => {
             try {
                 const menuData = await MenuService.getMenu();
                 setMenu(menuData);
+                setFilteredMenu(menuData);
             } catch (error) {
                 console.error("Failed to fetch menu:", error);
             }
@@ -22,33 +23,29 @@ const Menu = ({ cart, setCart }) => {
         fetchMenu();
     }, []);
 
-    const handleItemClick = (item) => {
-        setSelectedItem(item);
-    };
-
-    const closeDetails = () => {
-        setSelectedItem(null);
-    };
-
-    const addToCart = (item) => {
-        setCart([...cart, item]);
-        closeDetails();
+    // Фильтрация по категориям
+    const filterByCategory = (category) => {
+        setSelectedCategory(category);
+        if (category === "All") {
+            setFilteredMenu(menu);
+        } else {
+            setFilteredMenu(menu.filter((item) => item.category === category));
+        }
     };
 
     return (
-        <div className="relative">
+        <div>
             <CategoryHeader
-                categories={["Keks"]}
+                categories={["All", "Coffee", "Tea", "Desserts"]}
                 selectedCategory={selectedCategory}
-                onSelectCategory={setSelectedCategory}
-                isScrolled={isScrolled}
+                onSelectCategory={filterByCategory}
             />
-            <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
-                {menu.map((item) => (
+            <div className="p-6 max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                {filteredMenu.map((item) => (
                     <ItemCard
                         key={item.id}
                         item={item}
-                        onClick={handleItemClick}
+                        onClick={() => setSelectedItem(item)}
                     />
                 ))}
             </div>
@@ -56,8 +53,8 @@ const Menu = ({ cart, setCart }) => {
             {selectedItem && (
                 <SelectedItemDetails
                     item={selectedItem}
-                    addToCart={addToCart}
-                    closeDetails={closeDetails}
+                    addToCart={(item) => setCart([...cart, item])}
+                    closeDetails={() => setSelectedItem(null)}
                 />
             )}
         </div>

@@ -5,13 +5,15 @@ import Cart from "./components/Cart/Cart";
 import Login from "./components/Auth/Auth";
 import Register from "./components/Auth/Register";
 import About from "./components/About/About";
-
+import MainHeader from "./components/Header/MainHeader";
+import ScrollToTopButton from "./components/ScrollToTopButton";
 
 function App() {
-    const [cart, setCart] = useState([]); // State to manage cart items
+    const [cart, setCart] = useState([]);
 
     return (
         <Router>
+            <MainHeader cart={cart} />
             <Routes>
                 <Route
                     path="/"
@@ -21,19 +23,11 @@ function App() {
                     path="/cart"
                     element={<Cart cart={cart} setCart={setCart} />}
                 />
-                <Route
-                    path="/auth"
-                    element={<Login/>}
-                />
-                <Route
-                    path="/register"
-                    element={<Register/>}
-                />
-                <Route
-                    path="/about"
-                    element={<About/>}
-                />
+                <Route path="/auth" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/about" element={<About />} />
             </Routes>
+            <ScrollToTopButton />
         </Router>
     );
 }

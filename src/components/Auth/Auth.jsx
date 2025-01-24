@@ -20,17 +20,20 @@ const Login = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+        <div className="flex items-center justify-center h-[calc(100vh-85px)] bg-gray-100 p-4">
             <div className="w-full max-w-md bg-white shadow-md rounded-lg p-8">
-                <h2 className="text-2xl font-semibold mb-6 text-center">Вход в систему</h2>
+                <h2 className="text-2xl font-semibold mb-6 text-center">
+                    Вход в систему
+                </h2>
                 {error && (
-                    <div className="mb-4 text-red-500 text-sm">
-                        {error}
-                    </div>
+                    <div className="mb-4 text-red-500 text-sm">{error}</div>
                 )}
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <label htmlFor="email" className="block text-gray-700 mb-2">
+                        <label
+                            htmlFor="email"
+                            className="block text-gray-700 mb-2"
+                        >
                             Электронная почта
                         </label>
                         <input
@@ -44,7 +47,10 @@ const Login = () => {
                         />
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="password" className="block text-gray-700 mb-2">
+                        <label
+                            htmlFor="password"
+                            className="block text-gray-700 mb-2"
+                        >
                             Пароль
                         </label>
                         <input
@@ -67,7 +73,10 @@ const Login = () => {
                 <div className="mt-4 text-center">
                     <p className="text-gray-600">
                         Нет аккаунта?{" "}
-                        <Link to="/register" className="text-blue-500 hover:underline">
+                        <Link
+                            to="/register"
+                            className="text-blue-500 hover:underline"
+                        >
                             Зарегистрироваться
                         </Link>
                     </p>
