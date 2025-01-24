@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { MenuService } from "../../services/MenuService";
 import CategoryHeader from "./CategoryHeader";
 import ItemCard from "./ItemCard";
 import SelectedItemDetails from "./SelectedItemDetails";
-import { MenuService } from "../../services/MenuService";
 
 const Menu = ({ cart, setCart }) => {
     const [menu, setMenu] = useState([]);
@@ -20,15 +20,6 @@ const Menu = ({ cart, setCart }) => {
             }
         };
         fetchMenu();
-    }, []);
-
-    const handleScroll = () => {
-        setIsScrolled(window.scrollY > 50);
-    };
-
-    useEffect(() => {
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     const handleItemClick = (item) => {
