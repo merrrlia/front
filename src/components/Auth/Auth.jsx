@@ -13,7 +13,7 @@ const Login = () => {
         // Пример простой проверки
         if (email === "user@example.com" && password === "password") {
             // Успешный вход, перенаправление на главную страницу
-            navigate("/");
+            navigate("/menu");
         } else {
             setError("Неверная электронная почта или пароль.");
         }

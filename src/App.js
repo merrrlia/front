@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Menu from "./components/Menu/Menu";
 import Cart from "./components/Cart/Cart";
 import Login from "./components/Auth/Auth";
+import Register from "./components/Auth/Register";
 
 function App() {
     const [cart, setCart] = useState([]); // State to manage cart items
@@ -21,6 +22,10 @@ function App() {
                 <Route
                     path="/auth"
                     element={<Login/>}
+                />
+                <Route
+                    path="/register"
+                    element={<Register/>}
                 />
             </Routes>
         </Router>
