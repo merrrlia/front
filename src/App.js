@@ -7,6 +7,8 @@ import Register from "./components/Auth/Register";
 import About from "./components/About/About";
 import MainHeader from "./components/Header/MainHeader";
 import ScrollToTopButton from "./components/ScrollToTopButton";
+import AdminPanel from "./components/Admin/Admin";
+
 
 function App() {
     const [cart, setCart] = useState([]);
@@ -26,6 +28,7 @@ function App() {
                 <Route path="/auth" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/admin" element={<AdminPanel />} />
             </Routes>
             <ScrollToTopButton />
         </Router>
