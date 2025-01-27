@@ -9,20 +9,12 @@ import MainHeader from "./components/Header/MainHeader";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 
 function App() {
-    const [cart, setCart] = useState([]);
-
     return (
         <Router>
-            <MainHeader cart={cart} />
+            <MainHeader />
             <Routes>
-                <Route
-                    path="/"
-                    element={<Menu cart={cart} setCart={setCart} />}
-                />
-                <Route
-                    path="/cart"
-                    element={<Cart cart={cart} setCart={setCart} />}
-                />
+                <Route path="/" element={<Menu />} />
+                <Route path="/cart" element={<Cart />} />
                 <Route path="/auth" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/about" element={<About />} />

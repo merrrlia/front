@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthService } from "../../services/AuthService";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -7,20 +8,23 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Здесь вы можете добавить логику авторизации, например, запрос к API
-        // Пример простой проверки
-        if (email === "user@example.com" && password === "password") {
-            // Успешный вход, перенаправление на главную страницу
-            navigate("/menu");
-        } else {
-            setError("Неверная электронная почта или пароль.");
+        setError("");
+
+        try {
+            const data = await AuthService.login(email, password);
+            localStorage.setItem("token", data);
+            localStorage.setItem("userEmail", email);
+
+            navigate("/"); // Перенаправление на страницу меню после успешного входа
+        } catch (err) {
+            setError(err || "Ошибка при входе в систему.");
         }
     };
 
     return (
-        <div className="flex items-center justify-center h-[calc(100vh-85px)] bg-gray-100 p-4">
+        <div className="flex items-center justify-center h-screen bg-gray-100 p-4">
             <div className="w-full max-w-md bg-white shadow-md rounded-lg p-8">
                 <h2 className="text-2xl font-semibold mb-6 text-center">
                     Вход в систему

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthService } from "../../services/AuthService";
 
 const Register = () => {
     const navigate = useNavigate();
@@ -9,32 +10,29 @@ const Register = () => {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
         setSuccess("");
 
-        // Проверка совпадения паролей
         if (password !== confirmPassword) {
             setError("Пароли не совпадают.");
             return;
         }
 
-        // Простая логика регистрации (здесь можно добавить запрос к API)
-        if (email && password) {
+        try {
+            await AuthService.register(email, password);
             setSuccess(
-                "Регистрация прошла успешно! Перенаправление на страницу входа..."
+                "Регистрация успешна! Перенаправление на страницу входа..."
             );
-            setTimeout(() => {
-                navigate("/auth");
-            }, 2000);
-        } else {
-            setError("Пожалуйста, заполните все поля.");
+            setTimeout(() => navigate("/auth"), 2000);
+        } catch (err) {
+            setError(err || "Ошибка при регистрации.");
         }
     };
 
     return (
-        <div className="flex items-center justify-center h-[calc(100vh-85px)] bg-gray-100 p-4">
+        <div className="flex items-center justify-center h-screen bg-gray-100 p-4">
             <div className="w-full max-w-md bg-white shadow-md rounded-lg p-8">
                 <h2 className="text-2xl font-semibold mb-6 text-center">
                     Регистрация
@@ -108,7 +106,7 @@ const Register = () => {
                     <p className="text-gray-600">
                         Уже есть аккаунт?{" "}
                         <Link
-                            to="/auth"
+                            to="/login"
                             className="text-blue-500 hover:underline"
                         >
                             Войти

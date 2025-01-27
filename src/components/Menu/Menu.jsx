@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { MenuService } from "../../services/MenuService";
+import { CartService } from "../../services/CartService";
 import CategoryHeader from "../Header/CategoryHeader";
 import ItemCard from "./ItemCard";
 import SelectedItemDetails from "./SelectedItemDetails";
 
-const Menu = ({ cart, setCart }) => {
+const Menu = ({ token }) => {
     const [menu, setMenu] = useState([]);
     const [filteredMenu, setFilteredMenu] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [selectedItem, setSelectedItem] = useState(null);
+    const [cart, setCart] = useState([]);
 
     useEffect(() => {
         const fetchMenu = async () => {
@@ -20,8 +22,50 @@ const Menu = ({ cart, setCart }) => {
                 console.error("Failed to fetch menu:", error);
             }
         };
+
+        const fetchCart = async () => {
+            if (token) {
+                console.log("fetchCart");
+
+                try {
+                    const response = await CartService.getCart(token);
+                    console.log("CartService response:", response);
+
+                    // Проверяем, является ли response.data строкой или объектом
+                    let cartData;
+                    if (typeof response.data === "string") {
+                        // Если строка, обрезаем и исправляем формат
+                        const cleanedData = response.data
+                            .replace(/^cartItems=/, "") // Удаляем возможный префикс
+                            .replace(/=/g, ":") // Исправляем возможный "=" на ":"
+                            .replace(/'/g, '"'); // Заменяем одинарные кавычки на двойные
+
+                        cartData = JSON.parse(cleanedData);
+                    } else {
+                        cartData = response.data.cartItems
+                            ? JSON.parse(response.data.cartItems)
+                            : [];
+                    }
+
+                    setCart(cartData);
+                } catch (error) {
+                    console.error("Failed to fetch cart:", error);
+                }
+            } else {
+                console.log("fetchCart no token");
+            }
+        };
+
+        const token = localStorage.getItem("token");
+        if (token) {
+            console.log("token:", token);
+            fetchCart(token);
+        } else {
+            console.log("no token:");
+        }
+
         fetchMenu();
-    }, []);
+    }, [token]);
 
     // Фильтрация по категориям
     const filterByCategory = (category) => {
@@ -30,6 +74,16 @@ const Menu = ({ cart, setCart }) => {
             setFilteredMenu(menu);
         } else {
             setFilteredMenu(menu.filter((item) => item.category === category));
+        }
+    };
+
+    // Добавление товара в корзину и обновление на сервере
+    const addToCart = async (item) => {
+        try {
+            await CartService.updateCart([...cart, item]);
+            setCart([...cart, item]);
+        } catch (error) {
+            console.error("Failed to update cart:", error);
         }
     };
 
@@ -53,7 +107,7 @@ const Menu = ({ cart, setCart }) => {
             {selectedItem && (
                 <SelectedItemDetails
                     item={selectedItem}
-                    addToCart={(item) => setCart([...cart, item])}
+                    addToCart={addToCart}
                     closeDetails={() => setSelectedItem(null)}
                 />
             )}
