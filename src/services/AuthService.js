@@ -21,9 +21,9 @@ export const AuthService = {
                 email,
                 password,
             });
-            console.log(" login response.data: ", response.data);
+            console.log("login response.data: ", response.data);
 
-            return response.data;
+            return response.data; // Ожидаем объект с token и userInfo (например, роль)
         } catch (error) {
             throw error.response ? error.response.data.message : error.message;
         }

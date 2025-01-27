@@ -11,22 +11,27 @@ import {
 
 const MainHeader = ({ onSearch }) => {
     const [userEmail, setUserEmail] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem("token");
         const email = localStorage.getItem("userEmail");
+        const adminStatus = localStorage.getItem("isAdmin") === "true";
 
         if (token && email) {
             setUserEmail(email);
+            setIsAdmin(adminStatus);
         }
     }, []);
 
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("userEmail");
+        localStorage.removeItem("isAdmin");
         setUserEmail(null);
+        setIsAdmin(false);
         navigate("/auth");
     };
 
@@ -64,13 +69,15 @@ const MainHeader = ({ onSearch }) => {
                     <span className="hidden md:inline">О нас</span>
                 </Link>
 
-                <Link
-                    to="/admin"
-                    className="text-gray-700 text-lg md:text-xl font-medium hover:text-gray-500 transition flex items-center"
-                >
-                    <FaTools className="block md:hidden text-2xl" />
-                    <span className="hidden md:inline">Админка</span>
-                </Link>
+                {isAdmin && (
+                    <Link
+                        to="/admin"
+                        className="text-gray-700 text-lg md:text-xl font-medium hover:text-gray-500 transition flex items-center"
+                    >
+                        <FaTools className="block md:hidden text-2xl" />
+                        <span className="hidden md:inline">Админка</span>
+                    </Link>
+                )}
 
                 {userEmail ? (
                     <div className="flex items-center space-x-4">

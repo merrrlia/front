@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthService } from "../../services/AuthService";
 
-const Login = () => {
+const Auth = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -14,10 +14,14 @@ const Login = () => {
 
         try {
             const data = await AuthService.login(email, password);
-            localStorage.setItem("token", data);
-            localStorage.setItem("userEmail", email);
+            console.log("data", data);
 
-            navigate("/"); // Перенаправление на страницу меню после успешного входа
+            // Сохранение всех данных юзера в localStorage
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("userEmail", email);
+            localStorage.setItem("isAdmin", data.isAdmin ? "true" : "false");
+
+            navigate("/"); // Перенаправление на главную страницу после успешного входа
         } catch (err) {
             setError(err || "Ошибка при входе в систему.");
         }
@@ -90,4 +94,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Auth;
