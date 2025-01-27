@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaShoppingCart, FaUser, FaInfoCircle } from "react-icons/fa";
+import {
+    FaShoppingCart,
+    FaUser,
+    FaInfoCircle,
+    FaHome,
+    FaTools,
+} from "react-icons/fa";
 
 const MainHeader = () => {
     const [userEmail, setUserEmail] = useState(null);
@@ -32,6 +38,7 @@ const MainHeader = () => {
                 Zhash Café
             </Link>
             <div className="flex items-center space-x-4 md:space-x-6">
+                {/* About Us */}
                 <Link
                     to="/about"
                     className="text-gray-700 text-lg md:text-xl font-medium hover:text-gray-500 transition flex items-center"
@@ -62,6 +69,23 @@ const MainHeader = () => {
                     </Link>
                 )}
 
+                {/* Admin Button */}
+                <Link
+                    to="/admin"
+                    className="text-gray-700 text-lg md:text-xl font-medium hover:text-gray-500 transition flex items-center"
+                >
+                    <FaTools className="block md:hidden text-2xl" />
+                    <span className="hidden md:inline">Админка</span>
+                </Link>
+                {/* Sign In */}
+                <Link
+                    to="/auth"
+                    className="flex items-center px-6 py-2 bg-gradient-to-r from-[#8B4513] to-[#A0522D] text-white text-lg font-semibold rounded-full shadow-md hover:scale-105 transition-all duration-300"
+                >
+                    <FaUser className="block md:hidden text-2xl" />
+                    <span className="hidden md:inline">Войти</span>
+                </Link>
+                {/* Cart */}
                 <Link
                     to="/cart"
                     className="flex items-center px-6 py-2 bg-gradient-to-r from-[#8B4513] to-[#A0522D] text-white text-lg font-semibold rounded-full shadow-md hover:scale-105 transition-all duration-300"
