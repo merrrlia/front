@@ -5,12 +5,13 @@ import CategoryHeader from "../Header/CategoryHeader";
 import ItemCard from "./ItemCard";
 import SelectedItemDetails from "./SelectedItemDetails";
 
-const Menu = ({ token }) => {
+const Menu = ({ searchQuery, token }) => {
     const [menu, setMenu] = useState([]);
     const [filteredMenu, setFilteredMenu] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [selectedItem, setSelectedItem] = useState(null);
     const [cart, setCart] = useState([]);
+    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
         const fetchMenu = async () => {
@@ -18,6 +19,13 @@ const Menu = ({ token }) => {
                 const menuData = await MenuService.getMenu();
                 setMenu(menuData);
                 setFilteredMenu(menuData);
+
+                // Extracting unique categories
+                const uniqueCategories = [
+                    "All",
+                    ...new Set(menuData.map((item) => item.category)),
+                ];
+                setCategories(uniqueCategories);
             } catch (error) {
                 console.error("Failed to fetch menu:", error);
             }
@@ -25,21 +33,18 @@ const Menu = ({ token }) => {
 
         const fetchCart = async () => {
             if (token) {
-                console.log("fetchCart");
+                console.log("Fetching cart...");
 
                 try {
                     const response = await CartService.getCart(token);
                     console.log("CartService response:", response);
 
-                    // Проверяем, является ли response.data строкой или объектом
                     let cartData;
                     if (typeof response.data === "string") {
-                        // Если строка, обрезаем и исправляем формат
                         const cleanedData = response.data
-                            .replace(/^cartItems=/, "") // Удаляем возможный префикс
-                            .replace(/=/g, ":") // Исправляем возможный "=" на ":"
-                            .replace(/'/g, '"'); // Заменяем одинарные кавычки на двойные
-
+                            .replace(/^cartItems=/, "")
+                            .replace(/=/g, ":")
+                            .replace(/'/g, '"');
                         cartData = JSON.parse(cleanedData);
                     } else {
                         cartData = response.data.cartItems
@@ -48,40 +53,54 @@ const Menu = ({ token }) => {
                     }
 
                     setCart(cartData);
+                    localStorage.setItem("cart", JSON.stringify(cartData)); // Сохраняем корзину в localStorage
                 } catch (error) {
                     console.error("Failed to fetch cart:", error);
                 }
             } else {
-                console.log("fetchCart no token");
+                console.log("No token found for cart fetch");
+                const storedCart = localStorage.getItem("cart");
+                if (storedCart) {
+                    setCart(JSON.parse(storedCart));
+                }
             }
         };
 
-        const token = localStorage.getItem("token");
-        if (token) {
-            console.log("token:", token);
-            fetchCart(token);
-        } else {
-            console.log("no token:");
-        }
-
         fetchMenu();
+        fetchCart();
     }, [token]);
 
-    // Фильтрация по категориям
+    useEffect(() => {
+        let filteredResults = menu;
+
+        if (searchQuery) {
+            filteredResults = filteredResults.filter((item) =>
+                item.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+
+        if (selectedCategory !== "All") {
+            filteredResults = filteredResults.filter(
+                (item) => item.category === selectedCategory
+            );
+        }
+
+        setFilteredMenu(filteredResults);
+    }, [searchQuery, selectedCategory, menu]);
+
     const filterByCategory = (category) => {
         setSelectedCategory(category);
-        if (category === "All") {
-            setFilteredMenu(menu);
-        } else {
-            setFilteredMenu(menu.filter((item) => item.category === category));
-        }
     };
 
-    // Добавление товара в корзину и обновление на сервере
     const addToCart = async (item) => {
         try {
-            await CartService.updateCart([...cart, item]);
-            setCart([...cart, item]);
+            console.log("cart", cart, item);
+            const updatedCart = [...cart, item]; // Добавляем новый товар, не удаляя старые
+            setCart(updatedCart);
+            localStorage.setItem("cart", JSON.stringify(updatedCart)); // Сохраняем корзину в localStorage
+            console.log("updatedCart", updatedCart);
+
+            await CartService.updateCart(updatedCart);
         } catch (error) {
             console.error("Failed to update cart:", error);
         }
@@ -90,10 +109,11 @@ const Menu = ({ token }) => {
     return (
         <div>
             <CategoryHeader
-                categories={["All", "Coffee", "Tea", "Desserts"]}
+                categories={categories}
                 selectedCategory={selectedCategory}
                 onSelectCategory={filterByCategory}
             />
+
             <div className="p-6 max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {filteredMenu.map((item) => (
                     <ItemCard

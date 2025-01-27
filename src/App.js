@@ -9,13 +9,14 @@ import MainHeader from "./components/Header/MainHeader";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 import AdminPanel from "./components/Admin/Admin";
 
-
 function App() {
+    const [searchQuery, setSearchQuery] = useState("");
+
     return (
         <Router>
-            <MainHeader />
+            <MainHeader onSearch={setSearchQuery} />
             <Routes>
-                <Route path="/" element={<Menu />} />
+                <Route path="/" element={<Menu searchQuery={searchQuery} />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/auth" element={<Login />} />
                 <Route path="/register" element={<Register />} />

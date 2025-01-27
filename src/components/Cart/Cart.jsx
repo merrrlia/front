@@ -42,9 +42,10 @@ const Cart = () => {
 
     const removeFromCart = (index) => {
         const updatedCart = cart.filter((_, i) => i !== index);
+        console.log("updatedCart", updatedCart);
         setCart(updatedCart);
         if (token) {
-            CartService.updateCart(token, updatedCart);
+            CartService.updateCart(updatedCart);
         } else {
             console.error("No token available for cart update.");
         }

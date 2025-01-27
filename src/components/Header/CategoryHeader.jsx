@@ -20,19 +20,19 @@ const CategoryHeader = ({ categories, selectedCategory, onSelectCategory }) => {
                     : "bg-white"
             }`}
         >
-            <div className="p-4 flex justify-center space-x-4 overflow-x-auto">
+            <div className="p-4 flex justify-center space-x-6 overflow-x-auto text-lg font-semibold text-gray-700">
                 {categories.map((category) => (
-                    <button
+                    <span
                         key={category}
                         onClick={() => onSelectCategory(category)}
-                        className={`px-4 md:px-6 py-2 md:py-3 rounded-lg text-lg font-medium transition-all duration-300 ${
+                        className={`cursor-pointer transition-all duration-300 ${
                             selectedCategory === category
-                                ? "bg-[#8B4513] text-white"
-                                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                                ? "text-[#8B4513] border-b-2 border-[#8B4513]"
+                                : "text-gray-500 hover:text-gray-800"
                         }`}
                     >
                         {category}
-                    </button>
+                    </span>
                 ))}
             </div>
         </div>

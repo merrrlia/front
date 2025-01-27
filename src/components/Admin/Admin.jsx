@@ -1,119 +1,100 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { MenuService } from "../../services/MenuService";
+import AddItemModal from "./AddItemModal";
+import EditItemModal from "./EditItemModal";
 
 const AdminPanel = () => {
-    const [activeTab, setActiveTab] = useState("items"); // "items", "users", "orders"
+    const [items, setItems] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
 
-    // Пример данных
-    const [items, setItems] = useState([
-        { id: 1, name: "Капучино", description: "Горячий кофе с молоком", price: 1000, imageUrl: "" },
-    ]);
-    const [users, setUsers] = useState([
-        { id: 1, name: "Александр", email: "alex@mail.com", role: "user" },
-    ]);
-    const [orders, setOrders] = useState([
-        { id: 1, user: "Александр", items: ["Капучино"], total: 1000, status: "pending" },
-    ]);
+    useEffect(() => {
+        fetchMenu();
+    }, []);
 
-    // CRUD функции
-    const addItem = (newItem) => setItems([...items, newItem]);
-    const removeItem = (id) => setItems(items.filter((item) => item.id !== id));
-    const updateItem = (id, updatedItem) =>
-        setItems(items.map((item) => (item.id === id ? updatedItem : item)));
+    // Получение списка товаров
+    const fetchMenu = async () => {
+        try {
+            const menuData = await MenuService.getMenu();
+            setItems(menuData);
+        } catch (error) {
+            console.error("Failed to fetch menu:", error);
+        }
+    };
 
-    const removeUser = (id) => setUsers(users.filter((user) => user.id !== id));
+    // Удаление товара
+    const removeItem = async (id) => {
+        try {
+            await MenuService.deleteMenuItem(id);
+            setItems(items.filter((item) => item.id !== id));
+        } catch (error) {
+            console.error("Error deleting item:", error);
+        }
+    };
 
-    const updateOrderStatus = (id, status) =>
-        setOrders(
-            orders.map((order) =>
-                order.id === id ? { ...order, status } : order
-            )
-        );
+    // Открытие модального окна для редактирования
+    const openEditModal = (item) => {
+        setSelectedItem(item);
+        setEditModalOpen(true);
+    };
 
     return (
-        <div className="min-h-screen bg-[#FAE3C6] px-4 md:px-10 py-8">
-            <h1 className="text-3xl font-extrabold text-gray-800 mb-6 text-center">
-                Администраторская панель
+        <div className="min-h-screen bg-gray-100 px-6 py-10 flex flex-col items-center">
+            <h1 className="text-4xl font-bold text-gray-800 mb-8">
+                Панель Администратора
             </h1>
-            <div className="flex justify-center space-x-4 mb-8">
-                <button
-                    className={`px-6 py-3 rounded-full text-lg font-semibold shadow-md hover:scale-105 transition-all duration-300 ${
-                        activeTab === "items"
-                            ? "bg-[#8B4513] text-white"
-                            : "bg-gray-300 text-gray-700"
-                    }`}
-                    onClick={() => setActiveTab("items")}
-                >
-                    Товары
-                </button>
-                <button
-                    className={`px-6 py-3 rounded-full text-lg font-semibold shadow-md hover:scale-105 transition-all duration-300 ${
-                        activeTab === "users"
-                            ? "bg-[#8B4513] text-white"
-                            : "bg-gray-300 text-gray-700"
-                    }`}
-                    onClick={() => setActiveTab("users")}
-                >
-                    Пользователи
-                </button>
-                <button
-                    className={`px-6 py-3 rounded-full text-lg font-semibold shadow-md hover:scale-105 transition-all duration-300 ${
-                        activeTab === "orders"
-                            ? "bg-[#8B4513] text-white"
-                            : "bg-gray-300 text-gray-700"
-                    }`}
-                    onClick={() => setActiveTab("orders")}
-                >
-                    Заказы
-                </button>
-            </div>
 
-            {/* Таблица товаров */}
-            {activeTab === "items" && (
+            <button
+                onClick={() => setModalOpen(true)}
+                className="px-6 py-3 bg-[#8B4513] text-white text-lg font-semibold rounded-lg shadow-md hover:scale-105 transition-all"
+            >
+                Добавить товар
+            </button>
+
+            <div className="mt-10 w-full max-w-4xl">
+                <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+                    Список товаров
+                </h2>
                 <div className="bg-white rounded-xl shadow-lg p-6">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                        Управление товарами
-                    </h2>
-                    <button
-                        className="mb-4 px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-                        onClick={() =>
-                            addItem({
-                                id: Date.now(),
-                                name: "Новый товар",
-                                description: "Описание товара",
-                                price: 500,
-                                imageUrl: "",
-                            })
-                        }
-                    >
-                        Добавить товар
-                    </button>
-                    <div>
-                        {items.map((item) => (
+                    {items.length === 0 ? (
+                        <p className="text-gray-500 text-center">
+                            Пока нет товаров.
+                        </p>
+                    ) : (
+                        items.map((item) => (
                             <div
                                 key={item.id}
-                                className="flex justify-between items-center border-b border-gray-300 py-4"
+                                className="flex justify-between items-center border-b border-gray-200 py-4"
                             >
-                                <div>
-                                    <h3 className="text-lg font-bold">
-                                        {item.name}
-                                    </h3>
-                                    <p className="text-gray-600">
-                                        {item.description}
-                                    </p>
-                                    <p className="text-gray-800 font-semibold">
-                                        {item.price} тг
-                                    </p>
+                                <div className="flex items-center gap-4">
+                                    <img
+                                        src={
+                                            item.imageUrl ||
+                                            "https://via.placeholder.com/100"
+                                        }
+                                        alt={item.name}
+                                        className="w-16 h-16 rounded-lg object-cover"
+                                    />
+                                    <div>
+                                        <h3 className="text-lg font-bold text-gray-800">
+                                            {item.name}
+                                        </h3>
+                                        <p className="text-gray-600">
+                                            {item.description}
+                                        </p>
+                                        <p className="text-gray-800 font-semibold">
+                                            {item.price} тг
+                                        </p>
+                                        <p className="text-gray-600">
+                                            Категория: {item.category}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="flex items-center space-x-4">
+                                <div className="flex space-x-2">
                                     <button
                                         className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                                        onClick={() =>
-                                            updateItem(item.id, {
-                                                ...item,
-                                                name: "Обновленный товар",
-                                            })
-                                        }
+                                        onClick={() => openEditModal(item)}
                                     >
                                         Изменить
                                     </button>
@@ -125,87 +106,20 @@ const AdminPanel = () => {
                                     </button>
                                 </div>
                             </div>
-                        ))}
-                    </div>
+                        ))
+                    )}
                 </div>
-            )}
+            </div>
 
-            {/* Таблица пользователей */}
-            {activeTab === "users" && (
-                <div className="bg-white rounded-xl shadow-lg p-6">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                        Управление пользователями
-                    </h2>
-                    <div>
-                        {users.map((user) => (
-                            <div
-                                key={user.id}
-                                className="flex justify-between items-center border-b border-gray-300 py-4"
-                            >
-                                <div>
-                                    <h3 className="text-lg font-bold">
-                                        {user.name}
-                                    </h3>
-                                    <p className="text-gray-600">
-                                        {user.email}
-                                    </p>
-                                    <p className="text-gray-800 font-semibold">
-                                        Роль: {user.role}
-                                    </p>
-                                </div>
-                                <button
-                                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                                    onClick={() => removeUser(user.id)}
-                                >
-                                    Удалить
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+            {modalOpen && (
+                <AddItemModal setModalOpen={setModalOpen} setItems={setItems} />
             )}
-
-            {/* Таблица заказов */}
-            {activeTab === "orders" && (
-                <div className="bg-white rounded-xl shadow-lg p-6">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                        Обработка заказов
-                    </h2>
-                    <div>
-                        {orders.map((order) => (
-                            <div
-                                key={order.id}
-                                className="flex justify-between items-center border-b border-gray-300 py-4"
-                            >
-                                <div>
-                                    <h3 className="text-lg font-bold">
-                                        Заказ №{order.id}
-                                    </h3>
-                                    <p className="text-gray-600">
-                                        Клиент: {order.user}
-                                    </p>
-                                    <p className="text-gray-600">
-                                        Товары: {order.items.join(", ")}
-                                    </p>
-                                    <p className="text-gray-800 font-semibold">
-                                        Сумма: {order.total} тг
-                                    </p>
-                                    <p className="text-gray-600">
-                                        Статус: {order.status}
-                                    </p>
-                                </div>
-                                <button
-                                    className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                                    onClick={() =>
-                                        updateOrderStatus(order.id, "completed")
-                                    }
-                                >
-                                    Завершить
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+            {editModalOpen && (
+                <EditItemModal
+                    selectedItem={selectedItem}
+                    setEditModalOpen={setEditModalOpen}
+                    setItems={setItems}
+                />
             )}
         </div>
     );
