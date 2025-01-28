@@ -75,7 +75,7 @@ const MainHeader = ({ onSearch }) => {
                         className="text-gray-700 text-lg md:text-xl font-medium hover:text-gray-500 transition flex items-center"
                     >
                         <FaTools className="block md:hidden text-2xl" />
-                        <span className="hidden md:inline">Админка</span>
+                        <span className="hidden md:inline">Админ панель</span>
                     </Link>
                 )}
 
