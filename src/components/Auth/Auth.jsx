@@ -30,13 +30,12 @@ const Auth = () => {
             localStorage.setItem("userEmail", email);
             localStorage.setItem("isAdmin", data.isAdmin ? "true" : "false");
     
-            navigate("/"); // Перенаправление на главную страницу после успешного входа
+            window.location.href = "/"; // Перенаправление на главную страницу после успешного входа
         } catch (err) {
-            const errorMessage = err.response?.data || "Ошибка при входе в систему.";
+            const errorMessage = err.response?.data || "Неверный email или пароль. Попробуйте еще раз.";
             setError(errorMessage);
         }
     };
-    
 
     return (
         <div className="flex items-center justify-center h-screen bg-gray-100 p-4">
