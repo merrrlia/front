@@ -11,21 +11,32 @@ const Auth = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
-
+    
+        if (!email || !password) {
+            setError("Пожалуйста, заполните все поля.");
+            return;
+        }
+    
+        if (!/\S+@\S+\.\S+/.test(email)) {
+            setError("Введите действительный адрес электронной почты.");
+            return;
+        }
+    
         try {
             const data = await AuthService.login(email, password);
             console.log("data", data);
-
-            // Сохранение всех данных юзера в localStorage
+    
             localStorage.setItem("token", data.token);
             localStorage.setItem("userEmail", email);
             localStorage.setItem("isAdmin", data.isAdmin ? "true" : "false");
-
+    
             navigate("/"); // Перенаправление на главную страницу после успешного входа
         } catch (err) {
-            setError(err || "Ошибка при входе в систему.");
+            const errorMessage = err.response?.data || "Ошибка при входе в систему.";
+            setError(errorMessage);
         }
     };
+    
 
     return (
         <div className="flex items-center justify-center h-screen bg-gray-100 p-4">

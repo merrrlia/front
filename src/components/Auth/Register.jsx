@@ -27,7 +27,7 @@ const Register = () => {
             );
             setTimeout(() => navigate("/auth"), 2000);
         } catch (err) {
-            setError(err || "Ошибка при регистрации.");
+            setError(err || "Почта уже существует");
         }
     };
 
